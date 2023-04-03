@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Tag(models):
+class Tag(models.Model):
     name = models.CharField(max_length=63)
 
     def __str__(self):
@@ -16,4 +16,4 @@ class Task(models.Model):
     tags = models.ManyToManyField(Tag, related_name="tasks")
 
     def __str__(self):
-        return f"{Tag.name} : {self.content}"
+        return self.content
