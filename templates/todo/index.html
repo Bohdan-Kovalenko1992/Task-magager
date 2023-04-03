@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <h1>
+    Task list
+    <a href="{% url 'todo:task-create' %}" class="btn btn-primary link-to-page">
+      Create new task
+    </a>
+  </h1>
+  <hr>
+
+  <br>
+      {% for task in task_list %}
+        <div class="jumbotron">
+        <div><span>{{ task.content }}</span></div>
+        <td>Created: {{ task.creation_date }}</td>
+        <br>
+        <td>Deadline:{{ task.deadline }}</td>
+          {% if task.is_done %}
+            <b><span class="alert alert-success">Done</span></b>
+            <form method="post" action="{% url 'todo:task-toggle' pk=task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-warning">
+                    Undo
+                </button>
+            </form>
+          {% else %}
+            <b><span class="alert alert-danger">Not done</span></b>
+            <form method="post" action="{% url 'todo:task-toggle' pk=task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">
+                    Complete
+                </button>
+            </form>
+          {% endif %}
+        <span>
+
+        <span > Tags:
+            {% for tag in task.tags.all %}
+                <p class="badge badge-pill badge-info">{{ tag.name }}</p>
+            {% endfor %}
+        </span>
+          <a class="btn btn-outline-primary" href="{% url 'todo:task-update' pk=task.id %}">Update</a>
+          <a class="btn btn-outline-danger" href="{% url 'todo:task-delete' pk=task.id %}">Delete</a>
+        </span>
+        </div>
+        <br>
+      {% endfor %}
+    </table>
+
+
+
+{% endblock %}
